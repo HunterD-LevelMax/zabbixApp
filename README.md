@@ -1,1 +1,1 @@
-# zabbuxApp
+# zabbixApp
