@@ -7,18 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:backgroundTintMode="add"
-        android:clickable="true"
-        app:backgroundTint="#C61616"
-        app:srcCompat="@drawable/ic_baseline_refresh_24"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
@@ -27,8 +15,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
     </WebView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:backgroundTintMode="add"
+        android:clickable="true"
+        app:backgroundTint="#C61616"
+        app:srcCompat="@drawable/ic_baseline_refresh_24"
+        tools:ignore="SpeakableTextPresentCheck" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_replaceUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="16dp"
+        android:backgroundTintMode="add"
+        android:clickable="true"
+        app:backgroundTint="#C61616"
+        app:srcCompat="@drawable/ic_change_circle"
+        tools:ignore="SpeakableTextPresentCheck" />
 </FrameLayout>

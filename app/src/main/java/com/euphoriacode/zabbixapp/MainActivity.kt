@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +"/" + fileName
-
         val file = File(storageDir)
 
         try {
@@ -27,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         } catch (e:Exception) {
             Log.d("Error", e.toString())
         }
-
     }
 
     private fun checkFile(file: File): Boolean {

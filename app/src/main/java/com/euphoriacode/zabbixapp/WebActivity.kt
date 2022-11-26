@@ -17,7 +17,8 @@ import com.euphoriacode.zabbixapp.databinding.ActivityWebBinding
 class WebActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWebBinding
     private lateinit var webView: WebView
-
+    private lateinit var url: String
+    private var count: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)
@@ -28,14 +29,31 @@ class WebActivity : AppCompatActivity() {
         val mySettings = getSettings(storageDir)
 
         init()
-        loadUrl(mySettings.localIp)
+        url = mySettings.localIp
+
+        loadUrl(url)
         cookieSave()
 
-        binding.fabRefresh.setOnClickListener {
-           webView.loadUrl(mySettings.localIp)
+        binding.apply {
+            fabRefresh.setOnClickListener {
+                webView.loadUrl(url)
+            }
+
+            fabReplaceUrl.setOnClickListener {
+                count++
+                if (count == 1) {
+                    url = mySettings.globalUrl
+                    showToast("Use global url")
+                } else {
+                    url = mySettings.localIp
+                    showToast("Use local url")
+                    count = 0
+                }
+            }
         }
     }
-    private fun init(){
+
+    private fun init() {
         webView = binding.webView
     }
 
@@ -74,18 +92,18 @@ class WebActivity : AppCompatActivity() {
         return true
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-       when(item.itemId){
-           R.id.settings -> replaceActivity(SettingsActivity(), "no")
-       }
+        when (item.itemId) {
+            R.id.settings -> replaceActivity(SettingsActivity(), "no")
+        }
         return true
     }
 
-    private fun cookieSave(){
+    private fun cookieSave() {
         CookieManager.getInstance().acceptCookie()
         CookieManager.getInstance().flush() // сохранение cookies
     }
+
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack()
