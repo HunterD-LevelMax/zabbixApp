@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun checkFile(file: File): Boolean {
        return file.exists() && !file.isDirectory
     }

@@ -10,7 +10,6 @@ import java.io.File
 import java.io.FileWriter
 import java.io.Writer
 
-
 class SettingsActivity : AppCompatActivity() {
     private lateinit var mySettings: Settings
 
@@ -32,9 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.apply {
             buttonSave.setOnClickListener {
                 try {
-                    saveData(localUrl, globalUrl, fileName, storageDir)
-
-                    // saveData(localEditText.text.toString(), globalEditText.text.toString(), fileName, storageDir)
+                    saveData(localEditText.text.toString(), globalEditText.text.toString(), fileName, storageDir)
                     showToast("Saved successfully")
                 } catch (e: Exception) {
                     showToast("Error")
@@ -50,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun saveData(local_ip: String, global_ip: String, nameFile: String, path: String) {
-        var json = Gson().toJson(Settings(local_ip, global_ip))
+        val json = Gson().toJson(Settings(local_ip, global_ip))
         val file = File(path, nameFile)
         val output: Writer
 
