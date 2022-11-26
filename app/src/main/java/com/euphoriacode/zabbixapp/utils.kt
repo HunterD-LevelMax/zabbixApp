@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 
-const val localUrl = "http://10.1.0.10"
-const val globalUrl = "https://job.3err0.ru/zabbix.php?action=dashboard.view"
 const val urlGoogle = "https://www.google.com"
 const val fileName = "My settings.json"
 
