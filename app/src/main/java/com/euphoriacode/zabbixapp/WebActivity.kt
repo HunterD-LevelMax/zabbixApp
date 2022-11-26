@@ -17,6 +17,7 @@ import com.euphoriacode.zabbixapp.databinding.ActivityWebBinding
 class WebActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWebBinding
     private lateinit var webView: WebView
+    private lateinit var mySettings: Settings
     private lateinit var url: String
     private var count: Int = 0
 
@@ -26,11 +27,8 @@ class WebActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.title = "Dashboard panel"
 
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
-        val mySettings = getSettings(storageDir)
-
         init()
-        url = mySettings.localIp
+        loadData()
 
         loadUrl(url)
         cookieSave()
@@ -54,12 +52,19 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    private fun init() {
-        webView = binding.webView
+    private fun loadData() {
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
+        try {
+            mySettings = getSettings(storageDir)
+            url = mySettings.localIp
+        } catch (e: Exception) {
+            showToast("error")
+            e.printStackTrace()
+        }
     }
 
-    private fun getSettings(storageDir: String): Settings {
-        return toGson(getJsonFromFile(storageDir))
+    private fun init() {
+        webView = binding.webView
     }
 
     private fun loadUrl(url: String) {

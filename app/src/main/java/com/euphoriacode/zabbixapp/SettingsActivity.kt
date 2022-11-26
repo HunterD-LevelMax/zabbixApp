@@ -11,10 +11,9 @@ import java.io.FileWriter
 import java.io.Writer
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var mySettings: Settings
 
     private lateinit var binding: ActivitySettingsBinding
-
+    private lateinit var mySettings: Settings
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -63,7 +62,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun loadData(storageDir: String) {
         try {
-            mySettings = toGson(getJsonFromFile(storageDir))
+            mySettings = getSettings(storageDir)
             setDataEdit(mySettings)
         } catch (e: Exception) {
             showToast("error")

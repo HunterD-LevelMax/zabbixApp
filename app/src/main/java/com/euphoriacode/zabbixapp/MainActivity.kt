@@ -11,18 +11,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val storageDir =
-            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName
-        val file = File(storageDir)
+        val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName)
 
         try {
             if (checkFile(file)) {
                 replaceActivity(WebActivity())
-                Log.d("File", "exist")
+                Log.d("File: ", "exist")
             } else {
                 replaceActivity(SettingsActivity())
                 showToast("Enter new ip addresses")
-                Log.d("File", "no exist = $storageDir")
+                Log.d("File: ", "no exist")
             }
         } catch (e: Exception) {
             Log.d("Error", e.toString())

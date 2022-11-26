@@ -15,7 +15,6 @@ import java.nio.file.Paths
 const val localUrl = "http://10.1.0.10"
 const val globalUrl = "https://job.3err0.ru/zabbix.php?action=dashboard.view"
 const val urlGoogle = "https://www.google.com"
-
 const val fileName = "My settings.json"
 
 fun AppCompatActivity.replaceActivity(activity: AppCompatActivity) {
@@ -54,7 +53,11 @@ fun toGson(jsonString: String): Settings {
     return settings
 }
 
-fun getJsonFromFile(storageDir: String): String {
+fun getJsonStringFromFile(storageDir: String): String {
     Log.d("json", readFile("$storageDir/$fileName", StandardCharsets.UTF_8))
     return readFile("$storageDir/$fileName", StandardCharsets.UTF_8)
+}
+
+fun getSettings(storageDir: String): Settings {
+    return toGson(getJsonStringFromFile(storageDir))
 }
