@@ -11,7 +11,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() +"/" + fileName
+        val storageDir =
+            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName
         val file = File(storageDir)
 
         try {
@@ -23,13 +24,13 @@ class MainActivity : AppCompatActivity() {
                 showToast("Enter new ip addresses")
                 Log.d("File", "no exist = $storageDir")
             }
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             Log.d("Error", e.toString())
         }
     }
 
     private fun checkFile(file: File): Boolean {
-       return file.exists() && !file.isDirectory
+        return file.exists() && !file.isDirectory
     }
 
 }

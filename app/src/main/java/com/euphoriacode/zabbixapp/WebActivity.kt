@@ -19,6 +19,7 @@ class WebActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var url: String
     private var count: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)

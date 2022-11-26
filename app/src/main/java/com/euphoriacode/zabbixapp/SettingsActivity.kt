@@ -31,7 +31,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.apply {
             buttonSave.setOnClickListener {
                 try {
-                    saveData(localEditText.text.toString(), globalEditText.text.toString(), fileName, storageDir)
+                    saveData(
+                        localEditText.text.toString(),
+                        globalEditText.text.toString(),
+                        fileName,
+                        storageDir
+                    )
                     showToast("Saved successfully")
                 } catch (e: Exception) {
                     showToast("Error")
