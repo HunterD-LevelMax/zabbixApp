@@ -168,13 +168,13 @@ class WebActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        CookieManager.getInstance().flush()
+        cookieSave()
         super.onStop()
     }
 
     override fun onResume() {
         super.onResume()
-        CookieManager.getInstance().flush()
+        cookieSave()
     }
 
     override fun onDestroy() {
