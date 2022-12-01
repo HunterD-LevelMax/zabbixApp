@@ -14,40 +14,50 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var mySettings: Settings
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.title = "Settings"
 
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
 
         loadData(storageDir)
 
         binding.apply {
 
             buttonSave.setOnClickListener {
-                if (globalEditText.text.toString() != "" || localEditText.text.toString() != "") {
-                    try {
-                        saveData(
-                            localEditText.text.toString(),
-                            globalEditText.text.toString(),
-                            fileName,
-                            storageDir
-                        )
-                        showToast("Saved successfully")
-                    } catch (e: Exception) {
-                        showToast("Error")
-                        e.printStackTrace()
-                    }
-                } else {
-                    showToast("Enter urls in edit fields")
-                }
+                saveData()
             }
         }
+    }
+
+    private fun saveData() {
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
+
+        binding.apply {
+            if (globalEditText.text.toString() != "" || localEditText.text.toString() != "") {
+                try {
+                    saveFile(
+                        localEditText.text.toString(),
+                        globalEditText.text.toString(),
+                        fileName,
+                        storageDir
+                    )
+                    showToast("Saved successfully")
+                } catch (e: Exception) {
+                    showToast("Error")
+                    e.printStackTrace()
+                }
+            } else {
+                showToast("Enter urls in edit fields")
+            }
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -55,8 +65,16 @@ class SettingsActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
+        val file = File("$storageDir/$fileName")
 
-    private fun saveData(local_ip: String, global_ip: String, nameFile: String, path: String) {
+        if (checkFile(file)) {
+            super.onBackPressed()
+        }
+    }
+
+    private fun saveFile(local_ip: String, global_ip: String, nameFile: String, path: String) {
         val json = Gson().toJson(Settings(local_ip, global_ip))
         val file = File(path, nameFile)
         val output: Writer
@@ -64,7 +82,6 @@ class SettingsActivity : AppCompatActivity() {
         output = BufferedWriter(FileWriter(file))
         output.write(json.toString())
         output.close()
-        onBackPressed()
     }
 
     private fun loadData(storageDir: String) {

@@ -37,7 +37,6 @@ class WebActivity : AppCompatActivity() {
                 try {
                     refreshWeb()
                 } catch (e: Exception) {
-                    showToast("Error")
                     e.printStackTrace()
                 }
             }
@@ -78,7 +77,6 @@ class WebActivity : AppCompatActivity() {
             showToast("Enter url in settings")
         }
     }
-
 
     private fun loadData() {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
@@ -153,7 +151,6 @@ class WebActivity : AppCompatActivity() {
                 Log.d("File: ", "exist")
             } else {
                 replaceActivity(SettingsActivity(), "no")
-                showToast("Enter new ip addresses")
                 Log.d("File: ", "no exist")
             }
         } catch (e: Exception) {
@@ -175,7 +172,14 @@ class WebActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        cookieSave()
+        try {
+            checkSettings()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            cookieSave()
+        }
+
     }
 
     override fun onDestroy() {
