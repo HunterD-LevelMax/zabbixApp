@@ -134,6 +134,7 @@ class WebActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> replaceActivity(SettingsActivity(), "no")
+            R.id.exit -> finish()
         }
         return true
     }
