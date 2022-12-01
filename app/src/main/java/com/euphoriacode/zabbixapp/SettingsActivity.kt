@@ -28,18 +28,23 @@ class SettingsActivity : AppCompatActivity() {
         loadData(storageDir)
 
         binding.apply {
+
             buttonSave.setOnClickListener {
-                try {
-                    saveData(
-                        localEditText.text.toString(),
-                        globalEditText.text.toString(),
-                        fileName,
-                        storageDir
-                    )
-                    showToast("Saved successfully")
-                } catch (e: Exception) {
-                    showToast("Error")
-                    e.printStackTrace()
+                if (globalEditText.text.toString() != "" || localEditText.text.toString() != "") {
+                    try {
+                        saveData(
+                            localEditText.text.toString(),
+                            globalEditText.text.toString(),
+                            fileName,
+                            storageDir
+                        )
+                        showToast("Saved successfully")
+                    } catch (e: Exception) {
+                        showToast("Error")
+                        e.printStackTrace()
+                    }
+                } else {
+                    showToast("Enter urls in edit fields")
                 }
             }
         }
@@ -50,6 +55,7 @@ class SettingsActivity : AppCompatActivity() {
         return true
     }
 
+
     private fun saveData(local_ip: String, global_ip: String, nameFile: String, path: String) {
         val json = Gson().toJson(Settings(local_ip, global_ip))
         val file = File(path, nameFile)
@@ -58,6 +64,7 @@ class SettingsActivity : AppCompatActivity() {
         output = BufferedWriter(FileWriter(file))
         output.write(json.toString())
         output.close()
+        onBackPressed()
     }
 
     private fun loadData(storageDir: String) {
@@ -65,7 +72,6 @@ class SettingsActivity : AppCompatActivity() {
             mySettings = getSettings(storageDir)
             setDataEdit(mySettings)
         } catch (e: Exception) {
-            showToast("error")
             e.printStackTrace()
         }
     }

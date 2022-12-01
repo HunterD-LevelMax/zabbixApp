@@ -45,6 +45,10 @@ private fun createFile(name: String, paths: String): File {
     return File(paths, name)
 }
 
+fun checkFile(file: File): Boolean {
+    return file.exists() && !file.isDirectory
+}
+
 fun toGson(jsonString: String): Settings {
     val settings = Gson().fromJson(jsonString, Settings::class.java)
     Log.d("result success", settings.localIp + " " + settings.globalUrl)

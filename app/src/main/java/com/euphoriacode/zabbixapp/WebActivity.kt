@@ -3,6 +3,7 @@ package com.euphoriacode.zabbixapp
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.euphoriacode.zabbixapp.databinding.ActivityWebBinding
+import java.io.File
 
 class WebActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWebBinding
@@ -25,51 +27,82 @@ class WebActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = "Dashboard panel"
 
         init()
-        loadData()
-
-        loadUrl(url)
+        checkSettings()
         cookieSave()
 
         binding.apply {
             fabRefresh.setOnClickListener {
-                webView.loadUrl(url)
+                try {
+                    refreshWeb()
+                } catch (e: Exception) {
+                    showToast("Error")
+                    e.printStackTrace()
+                }
             }
 
             fabReplaceUrl.setOnClickListener {
-                count++
-                if (count == 1) {
-                    url = mySettings.globalUrl
-                    showToast("Use global url")
-                } else {
-                    url = mySettings.localIp
-                    showToast("Use local url")
-                    count = 0
+                try {
+                    replaceUrl()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
     }
+
+    private fun init() {
+        setTitle()
+        webView = binding.webView
+    }
+
+    private fun replaceUrl() {
+        count++
+        if (count == 1) {
+            url = mySettings.globalUrl
+            loadData()
+        } else {
+            url = mySettings.localIp
+            loadData()
+            setTitle()
+            count = 0
+        }
+        setTitle()
+    }
+
+    private fun refreshWeb() {
+        if (url != "") {
+            webView.loadUrl(url)
+        } else {
+            showToast("Enter url in settings")
+        }
+    }
+
 
     private fun loadData() {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
         try {
             mySettings = getSettings(storageDir)
             url = mySettings.localIp
+            loadUrl(url)
         } catch (e: Exception) {
-            showToast("error")
+            showToast("edit urls settings")
             e.printStackTrace()
         }
-    }
-
-    private fun init() {
-        webView = binding.webView
     }
 
     private fun loadUrl(url: String) {
         setupWebView()
         webView.loadUrl(url)
+    }
+
+    private fun setTitle() {
+        if (count == 0) {
+            supportActionBar?.title = "Dashboard panel local"
+        } else {
+            supportActionBar?.title = "Dashboard panel global"
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -109,6 +142,25 @@ class WebActivity : AppCompatActivity() {
         CookieManager.getInstance().acceptCookie()
         CookieManager.getInstance().flush() // сохранение cookies
     }
+
+    private fun checkSettings() {
+        val file =
+            File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName)
+        try {
+            if (checkFile(file)) {
+                loadData()
+                Log.d("File: ", "exist")
+            } else {
+                replaceActivity(SettingsActivity(), "no")
+                showToast("Enter new ip addresses")
+                Log.d("File: ", "no exist")
+            }
+        } catch (e: Exception) {
+            Log.d("Error", e.toString())
+        }
+    }
+
+
 
     override fun onBackPressed() {
         if (webView.canGoBack()) {
