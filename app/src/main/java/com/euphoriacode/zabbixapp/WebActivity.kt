@@ -160,15 +160,11 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack()
-            CookieManager.getInstance().flush()
-        } else {
-            CookieManager.getInstance().flush()
         }
+        CookieManager.getInstance().flush()
     }
 
     override fun onStop() {
