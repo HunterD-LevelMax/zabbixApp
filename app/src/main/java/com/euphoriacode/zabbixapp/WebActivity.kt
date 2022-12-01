@@ -179,7 +179,6 @@ class WebActivity : AppCompatActivity() {
         } finally {
             cookieSave()
         }
-
     }
 
     override fun onDestroy() {

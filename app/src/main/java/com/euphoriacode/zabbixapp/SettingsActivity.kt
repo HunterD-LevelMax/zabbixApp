@@ -14,7 +14,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var mySettings: Settings
-
+    private var flag: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -31,12 +31,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.apply {
 
             buttonSave.setOnClickListener {
-                saveData()
+                flag = saveData()
             }
         }
     }
 
-    private fun saveData() {
+    private fun saveData(): Boolean {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
 
         binding.apply {
@@ -53,11 +53,12 @@ class SettingsActivity : AppCompatActivity() {
                     showToast("Error")
                     e.printStackTrace()
                 }
+                return true
             } else {
+                return false
                 showToast("Enter urls in edit fields")
             }
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -66,10 +67,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
-        val file = File("$storageDir/$fileName")
-
-        if (checkFile(file)) {
+        if (flag) {
             super.onBackPressed()
         }
     }
@@ -88,6 +86,7 @@ class SettingsActivity : AppCompatActivity() {
         try {
             mySettings = getSettings(storageDir)
             setDataEdit(mySettings)
+            flag = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
