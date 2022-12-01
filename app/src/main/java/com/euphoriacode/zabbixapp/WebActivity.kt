@@ -164,7 +164,7 @@ class WebActivity : AppCompatActivity() {
         if (webView.canGoBack()) {
             webView.goBack()
         }
-        CookieManager.getInstance().flush()
+        cookieSave()
     }
 
     override fun onStop() {
