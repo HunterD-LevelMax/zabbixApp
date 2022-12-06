@@ -82,7 +82,6 @@ class WebActivity : AppCompatActivity() {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
         try {
             mySettings = getSettings(storageDir)
-            url = mySettings.localIp
             loadUrl(url)
         } catch (e: Exception) {
             showToast("edit urls settings")
@@ -148,6 +147,7 @@ class WebActivity : AppCompatActivity() {
         try {
             if (checkFile(file)) {
                 loadData()
+                url = mySettings.localIp
                 Log.d("File: ", "exist")
             } else {
                 replaceActivity(SettingsActivity(), "no")
