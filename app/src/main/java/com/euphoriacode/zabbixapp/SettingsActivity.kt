@@ -55,8 +55,8 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 return true
             } else {
-                return false
                 showToast("Enter urls in edit fields")
+                    return false
             }
         }
     }

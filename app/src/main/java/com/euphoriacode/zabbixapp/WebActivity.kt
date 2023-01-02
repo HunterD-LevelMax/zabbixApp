@@ -84,7 +84,6 @@ class WebActivity : AppCompatActivity() {
             mySettings = getSettings(storageDir)
             loadUrl(url)
         } catch (e: Exception) {
-            showToast("edit urls settings")
             e.printStackTrace()
         }
     }

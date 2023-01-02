@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
             if (checkFile(file)) {
                 Log.d("File: ", "exist")
             } else {
-                showToast("Enter new ip addresses")
                 Log.d("File: ", "no exist")
             }
         } catch (e: Exception) {
