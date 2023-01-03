@@ -40,7 +40,6 @@ class WebActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-
             fabReplaceUrl.setOnClickListener {
                 try {
                     replaceUrl()
