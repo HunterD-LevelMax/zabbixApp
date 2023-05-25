@@ -2,4 +2,6 @@
     <string name="app_name">ZabbixApp</string>
     <string name="internet_status_message">Проверьте подключение к интернету и перезапустите приложение</string>
     <string name="filename">Settings.json</string>
+    <string name="global_url_dashboard">Dashboard panel global</string>
+    <string name="local_url_dasboard">Dashboard panel local</string>
 </resources>

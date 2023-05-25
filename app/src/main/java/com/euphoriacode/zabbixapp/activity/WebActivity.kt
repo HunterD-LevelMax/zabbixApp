@@ -1,9 +1,14 @@
 package com.euphoriacode.zabbixapp.activity
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
 import android.view.*
 import android.webkit.CookieManager
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.euphoriacode.zabbixapp.*
 import com.euphoriacode.zabbixapp.castomclass.CustomWebView
@@ -13,6 +18,7 @@ import java.io.File
 
 class WebActivity : AppCompatActivity() {
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var binding: ActivityWebBinding
     private lateinit var webView: CustomWebView
     private lateinit var dataSettings: DataSettings
@@ -34,7 +40,9 @@ class WebActivity : AppCompatActivity() {
 
     private fun init() {
         setTitle()
+        progressBar = binding.progressBar
         webView = binding.webView
+        webView.setProgressBar(progressBar)
     }
 
     private fun replaceUrl() {
@@ -52,9 +60,9 @@ class WebActivity : AppCompatActivity() {
 
     private fun setTitle() {
         val title = if (isGlobalUrl) {
-            "Dashboard panel global"
+            getString(R.string.global_url_dashboard)
         } else {
-            "Dashboard panel local"
+            getString(R.string.local_url_dasboard)
         }
         supportActionBar?.title = title
     }
@@ -93,10 +101,11 @@ class WebActivity : AppCompatActivity() {
             }
             R.id.menu_pc_version -> {
                 item.isChecked = !item.isChecked
-                setPcVersionMode(item.isChecked)
+                setPcMode(item.isChecked)
+                showToast("Doesn't work any websites")
                 true
             }
-            R.id.menu_via_btc ->{
+            R.id.menu_via_btc -> {
                 webView.loadUrl(via_url)
                 true
             }
@@ -108,19 +117,8 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPcVersionMode(checked: Boolean) {
-        webView.settings.apply {
-
-            useWideViewPort = true
-            loadWithOverviewMode = true
-
-            userAgentString = if (checked) {
-                "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (HTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
-            } else {
-                ""
-            }
-        }
-        webView.reload()
+    private fun setPcMode(checked: Boolean) {
+        webView.setPcVersionMode(checked)
     }
 
     private fun saveCookies() {
@@ -142,6 +140,7 @@ class WebActivity : AppCompatActivity() {
             replaceActivity(SettingsActivity(), "no")
         }
     }
+
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -172,6 +171,7 @@ class WebActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
+            setTitle()
             saveCookies()
         }
     }
