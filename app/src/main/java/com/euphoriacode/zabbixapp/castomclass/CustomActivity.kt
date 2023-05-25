@@ -1,4 +1,4 @@
-package com.euphoriacode.zabbixapp
+package com.euphoriacode.zabbixapp.castomclass
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

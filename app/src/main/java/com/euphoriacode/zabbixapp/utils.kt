@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.euphoriacode.zabbixapp.data.DataSettings
 import com.google.gson.Gson
 import java.io.File
 import java.nio.charset.Charset
@@ -15,9 +16,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 
-
 const val via_url = "https://www.viabtc.com/observer/dashboard?access_key=3b4610e65e10c63440ed7232780fbd5c&user_id=193414&coin=BTC&type=active"
-
 
 fun AppCompatActivity.replaceActivity(activity: AppCompatActivity) {
     val intent = Intent(this, activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

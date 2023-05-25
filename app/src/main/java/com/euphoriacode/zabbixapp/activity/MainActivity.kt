@@ -1,9 +1,10 @@
-package com.euphoriacode.zabbixapp
+package com.euphoriacode.zabbixapp.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import com.euphoriacode.zabbixapp.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {

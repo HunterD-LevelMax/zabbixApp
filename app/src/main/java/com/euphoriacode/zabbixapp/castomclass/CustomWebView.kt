@@ -1,4 +1,4 @@
-package com.euphoriacode.zabbixapp
+package com.euphoriacode.zabbixapp.castomclass
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -1,14 +1,18 @@
-package com.euphoriacode.zabbixapp
+package com.euphoriacode.zabbixapp.activity
 
 import android.os.Bundle
 import android.os.Environment
 import android.view.*
 import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatActivity
+import com.euphoriacode.zabbixapp.*
+import com.euphoriacode.zabbixapp.castomclass.CustomWebView
+import com.euphoriacode.zabbixapp.data.DataSettings
 import com.euphoriacode.zabbixapp.databinding.ActivityWebBinding
 import java.io.File
 
 class WebActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityWebBinding
     private lateinit var webView: CustomWebView
     private lateinit var dataSettings: DataSettings
@@ -92,7 +96,7 @@ class WebActivity : AppCompatActivity() {
                 setPcVersionMode(item.isChecked)
                 true
             }
-            R.id.menu_via_btc->{
+            R.id.menu_via_btc ->{
                 webView.loadUrl(via_url)
                 true
             }

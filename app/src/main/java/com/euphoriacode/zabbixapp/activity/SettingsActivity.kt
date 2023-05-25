@@ -1,9 +1,14 @@
-package com.euphoriacode.zabbixapp
+package com.euphoriacode.zabbixapp.activity
 
 import android.os.Bundle
 import android.os.Environment
 import android.view.KeyEvent
+import com.euphoriacode.zabbixapp.R
+import com.euphoriacode.zabbixapp.castomclass.CustomActivity
+import com.euphoriacode.zabbixapp.data.DataSettings
 import com.euphoriacode.zabbixapp.databinding.ActivitySettingsBinding
+import com.euphoriacode.zabbixapp.getSettings
+import com.euphoriacode.zabbixapp.showToast
 import com.google.gson.Gson
 import java.io.BufferedWriter
 import java.io.File
@@ -31,7 +36,6 @@ class SettingsActivity : CustomActivity() {
             binding.localEditText.setText("http://10.1.0.10")
             e.printStackTrace()
         }
-
 
         binding.apply {
             buttonSave.setOnClickListener {

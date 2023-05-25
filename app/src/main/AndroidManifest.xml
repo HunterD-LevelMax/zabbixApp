@@ -16,7 +16,7 @@
         android:theme="@style/Theme.ZabbixApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -24,11 +24,11 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".WebActivity"
+            android:name=".activity.WebActivity"
             android:configChanges="uiMode|orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
