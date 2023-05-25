@@ -14,9 +14,14 @@
         android:orderInCategory="2"
         />
     <item
+        android:id="@+id/menu_via_btc"
+        android:title="Via Btc"
+        android:orderInCategory="3"
+        />
+    <item
         android:id="@+id/menu_exit"
         android:icon="@drawable/ic_exit"
         android:title="Exit"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         />
 </menu>

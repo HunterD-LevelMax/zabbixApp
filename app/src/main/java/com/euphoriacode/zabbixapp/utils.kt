@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 
+
+const val via_url = "https://www.viabtc.com/observer/dashboard?access_key=3b4610e65e10c63440ed7232780fbd5c&user_id=193414&coin=BTC&type=active"
+
+
 fun AppCompatActivity.replaceActivity(activity: AppCompatActivity) {
     val intent = Intent(this, activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
     startActivity(intent)

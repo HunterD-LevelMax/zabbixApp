@@ -92,6 +92,10 @@ class WebActivity : AppCompatActivity() {
                 setPcVersionMode(item.isChecked)
                 true
             }
+            R.id.menu_via_btc->{
+                webView.loadUrl(via_url)
+                true
+            }
             R.id.menu_exit -> {
                 finish()
                 true
