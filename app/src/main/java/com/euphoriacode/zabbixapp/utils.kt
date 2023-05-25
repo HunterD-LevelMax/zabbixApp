@@ -41,10 +41,6 @@ fun readFile(path: String, encoding: Charset): String {
     return Files.readAllLines(Paths.get(path), encoding)[0]
 }
 
-private fun createFile(name: String, paths: String): File {
-    return File(paths, name)
-}
-
 fun checkFile(file: File): Boolean {
     return file.exists() && !file.isDirectory
 }

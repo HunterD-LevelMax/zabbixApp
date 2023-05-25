@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
                 replaceActivity(WebActivity())
             } else {
                 showToast("Enter urls")
-                replaceActivity(SettingsActivity())
             }
         } catch (e: Exception) {
             Log.d("Error", e.toString())

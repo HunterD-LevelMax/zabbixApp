@@ -2,6 +2,7 @@ package com.euphoriacode.zabbixapp
 
 import android.os.Bundle
 import android.os.Environment
+import android.view.KeyEvent
 import com.euphoriacode.zabbixapp.databinding.ActivitySettingsBinding
 import com.google.gson.Gson
 import java.io.BufferedWriter
@@ -22,7 +23,15 @@ class SettingsActivity : CustomActivity() {
         supportActionBar?.title = "Settings"
 
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
-        loadData(storageDir)
+
+        try {
+            loadData(storageDir)
+        }catch (e:Exception){
+            binding.globalEditText.setText("https://job.3err0.ru/zabbix.php?action=dashboard.view")
+            binding.localEditText.setText("http://10.1.0.10")
+            e.printStackTrace()
+        }
+
 
         binding.apply {
             buttonSave.setOnClickListener {
@@ -30,9 +39,6 @@ class SettingsActivity : CustomActivity() {
             }
         }
     }
-
-    // https://job.3err0.ru/zabbix.php?action=dashboard.view
-    // http://10.1.0.10
 
     private fun saveData(): Boolean {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
@@ -60,14 +66,16 @@ class SettingsActivity : CustomActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 
-    override fun onBackPressed() {
-        if (dataSave) {
-            super.onBackPressed()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && dataSave) {
+            onBackPressedDispatcher.onBackPressed()
+                return true
         }
+        return false
     }
 
     private fun saveFile(local_ip: String, global_ip: String, nameFile: String, path: String) {

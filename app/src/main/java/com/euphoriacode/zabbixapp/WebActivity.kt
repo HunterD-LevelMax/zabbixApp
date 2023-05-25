@@ -2,7 +2,6 @@ package com.euphoriacode.zabbixapp
 
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.*
 import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ class WebActivity : AppCompatActivity() {
     private lateinit var webView: CustomWebView
     private lateinit var dataSettings: DataSettings
     private lateinit var url: String
+    private var isGlobalUrl: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +32,6 @@ class WebActivity : AppCompatActivity() {
         setTitle()
         webView = binding.webView
     }
-
-    private var isGlobalUrl: Boolean = false
 
     private fun replaceUrl() {
         isGlobalUrl = !isGlobalUrl
@@ -58,11 +56,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     private fun refreshWeb() {
-        if (url.isNotEmpty()) {
-            webView.loadUrl(url)
-        } else {
-            showToast("Enter URL in settings")
-        }
+        webView.reload()
     }
 
     private fun loadData() {
@@ -72,8 +66,6 @@ class WebActivity : AppCompatActivity() {
         url = dataSettings.localIp
         webView.loadUrl(url)
     }
-
-
 
     private fun setupFabButtons() {
         binding.fabRefresh.setOnClickListener {
@@ -95,7 +87,12 @@ class WebActivity : AppCompatActivity() {
                 replaceActivity(SettingsActivity(), "no")
                 true
             }
-            R.id.exit -> {
+            R.id.menu_pc_version -> {
+                item.isChecked = !item.isChecked
+                setPcVersionMode(item.isChecked)
+                true
+            }
+            R.id.menu_exit -> {
                 finish()
                 true
             }
@@ -103,10 +100,25 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    private fun cookieSave() {
+    private fun setPcVersionMode(checked: Boolean) {
+        webView.settings.apply {
+
+            useWideViewPort = true
+            loadWithOverviewMode = true
+
+            userAgentString = if (checked) {
+                "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (HTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
+            } else {
+                ""
+            }
+        }
+        webView.reload()
+    }
+
+    private fun saveCookies() {
         CookieManager.getInstance().apply {
             acceptCookie()
-            flush() // сохранение cookies
+            flush()
         }
     }
 
@@ -131,15 +143,17 @@ class WebActivity : AppCompatActivity() {
             }
             if (webView.canGoBack()) {
                 webView.goBack()
-                cookieSave()
+                saveCookies()
                 return true
+            } else {
+                onBackPressedDispatcher.onBackPressed()
             }
         }
         return false
     }
 
     override fun onStop() {
-        cookieSave()
+        saveCookies()
         super.onStop()
     }
 
@@ -150,7 +164,7 @@ class WebActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            cookieSave()
+            saveCookies()
         }
     }
 
