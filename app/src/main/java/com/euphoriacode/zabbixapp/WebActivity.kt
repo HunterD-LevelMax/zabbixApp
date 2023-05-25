@@ -1,52 +1,30 @@
 package com.euphoriacode.zabbixapp
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.CookieManager
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.euphoriacode.zabbixapp.databinding.ActivityWebBinding
 import java.io.File
 
 class WebActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWebBinding
-    private lateinit var webView: WebView
-    private lateinit var mySettings: Settings
+    private lateinit var webView: CustomWebView
+    private lateinit var dataSettings: DataSettings
     private lateinit var url: String
-    private var count: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        init()
-        checkSettings()
-        cookieSave()
-
-        binding.apply {
-            fabRefresh.setOnClickListener {
-                try {
-                    refreshWeb()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            fabReplaceUrl.setOnClickListener {
-                try {
-                    replaceUrl()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+        try {
+            init()
+            checkSettings()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -55,69 +33,54 @@ class WebActivity : AppCompatActivity() {
         webView = binding.webView
     }
 
+    private var isGlobalUrl: Boolean = false
+
     private fun replaceUrl() {
-        count++
-        if (count == 1) {
-            url = mySettings.globalUrl
-            loadData()
+        isGlobalUrl = !isGlobalUrl
+
+        url = if (isGlobalUrl) {
+            dataSettings.globalUrl
         } else {
-            url = mySettings.localIp
-            loadData()
-            setTitle()
-            count = 0
+            dataSettings.localIp
         }
+
         setTitle()
-    }
-
-    private fun refreshWeb() {
-        if (url != "") {
-            webView.loadUrl(url)
-        } else {
-            showToast("Enter url in settings")
-        }
-    }
-
-    private fun loadData() {
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
-        try {
-            mySettings = getSettings(storageDir)
-            loadUrl(url)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun loadUrl(url: String) {
-        setupWebView()
         webView.loadUrl(url)
     }
 
     private fun setTitle() {
-        if (count == 0) {
-            supportActionBar?.title = "Dashboard panel local"
+        val title = if (isGlobalUrl) {
+            "Dashboard panel global"
         } else {
-            supportActionBar?.title = "Dashboard panel global"
+            "Dashboard panel local"
+        }
+        supportActionBar?.title = title
+    }
+
+    private fun refreshWeb() {
+        if (url.isNotEmpty()) {
+            webView.loadUrl(url)
+        } else {
+            showToast("Enter URL in settings")
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebView() {
-        webView.webViewClient = WebViewClient()
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+    private fun loadData() {
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        val filename = getString(R.string.filename)
+        dataSettings = getSettings(storageDir.toString(), filename)
+        url = dataSettings.localIp
+        webView.loadUrl(url)
+    }
 
-        webView.apply {
-            settings.apply {
-                javaScriptEnabled = true
-                cacheMode
-                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                allowContentAccess = true
-                userAgentString
-                domStorageEnabled = true
-                allowUniversalAccessFromFileURLs
-                builtInZoomControls = true
-                displayZoomControls = false
-                loadsImagesAutomatically = true
-            }
+
+
+    private fun setupFabButtons() {
+        binding.fabRefresh.setOnClickListener {
+            refreshWeb()
+        }
+        binding.fabReplaceUrl.setOnClickListener {
+            replaceUrl()
         }
     }
 
@@ -127,40 +90,52 @@ class WebActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.settings -> replaceActivity(SettingsActivity(), "no")
-            R.id.exit -> finish()
+        return when (item.itemId) {
+            R.id.menu_settings -> {
+                replaceActivity(SettingsActivity(), "no")
+                true
+            }
+            R.id.exit -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return true
     }
 
     private fun cookieSave() {
-        CookieManager.getInstance().acceptCookie()
-        CookieManager.getInstance().flush() // сохранение cookies
+        CookieManager.getInstance().apply {
+            acceptCookie()
+            flush() // сохранение cookies
+        }
     }
 
     private fun checkSettings() {
-        val file =
-            File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName)
-        try {
-            if (checkFile(file)) {
-                loadData()
-                url = mySettings.localIp
-                Log.d("File: ", "exist")
-            } else {
-                replaceActivity(SettingsActivity(), "no")
-                Log.d("File: ", "no exist")
-            }
-        } catch (e: Exception) {
-            Log.d("Error", e.toString())
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        val filename = getString(R.string.filename)
+        val file = File(storageDir, filename)
+
+        if (checkFile(file)) {
+            loadData()
+            setupFabButtons()
+        } else {
+            replaceActivity(SettingsActivity(), "no")
         }
     }
 
-    override fun onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!getInternetStatus(this)) {
+                showToast(getString(R.string.internet_status_message))
+                return true
+            }
+            if (webView.canGoBack()) {
+                webView.goBack()
+                cookieSave()
+                return true
+            }
         }
-        cookieSave()
+        return false
     }
 
     override fun onStop() {

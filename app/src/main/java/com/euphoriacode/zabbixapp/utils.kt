@@ -1,7 +1,10 @@
 package com.euphoriacode.zabbixapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +14,6 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
-
-const val urlGoogle = "https://www.google.com"
-const val fileName = "My settings.json"
 
 fun AppCompatActivity.replaceActivity(activity: AppCompatActivity) {
     val intent = Intent(this, activity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -49,17 +49,24 @@ fun checkFile(file: File): Boolean {
     return file.exists() && !file.isDirectory
 }
 
-fun toGson(jsonString: String): Settings {
-    val settings = Gson().fromJson(jsonString, Settings::class.java)
-    Log.d("result success", settings.localIp + " " + settings.globalUrl)
-    return settings
+fun toGson(jsonString: String): DataSettings {
+    val dataSettings = Gson().fromJson(jsonString, DataSettings::class.java)
+    Log.d("result success", dataSettings.localIp + " " + dataSettings.globalUrl)
+    return dataSettings
 }
 
-fun getJsonStringFromFile(storageDir: String): String {
-    Log.d("json", readFile("$storageDir/$fileName", StandardCharsets.UTF_8))
-    return readFile("$storageDir/$fileName", StandardCharsets.UTF_8)
+fun getJsonStringFromFile(storageDir: String, filename:String): String {
+    return readFile("$storageDir/$filename", StandardCharsets.UTF_8)
 }
 
-fun getSettings(storageDir: String): Settings {
-    return toGson(getJsonStringFromFile(storageDir))
+fun getSettings(storageDir: String, filename: String): DataSettings {
+    return toGson(getJsonStringFromFile(storageDir, filename))
+}
+
+fun getInternetStatus(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }

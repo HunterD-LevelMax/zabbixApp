@@ -2,7 +2,6 @@ package com.euphoriacode.zabbixapp
 
 import android.os.Bundle
 import android.os.Environment
-import androidx.appcompat.app.AppCompatActivity
 import com.euphoriacode.zabbixapp.databinding.ActivitySettingsBinding
 import com.google.gson.Gson
 import java.io.BufferedWriter
@@ -10,11 +9,12 @@ import java.io.File
 import java.io.FileWriter
 import java.io.Writer
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : CustomActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var mySettings: Settings
-    private var flag: Boolean = false
+    private lateinit var myDataSettings: DataSettings
+    private var dataSave: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -22,30 +22,28 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.title = "Settings"
 
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
         loadData(storageDir)
 
         binding.apply {
-
             buttonSave.setOnClickListener {
-                flag = saveData()
+                dataSave = saveData()
             }
         }
     }
+
+    // https://job.3err0.ru/zabbix.php?action=dashboard.view
+    // http://10.1.0.10
 
     private fun saveData(): Boolean {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString()
 
         binding.apply {
-            if (globalEditText.text.toString() != "" || localEditText.text.toString() != "") {
+            if (globalEditText.text.isNotEmpty() || localEditText.text.isNotEmpty()) {
                 try {
                     saveFile(
                         localEditText.text.toString(),
                         globalEditText.text.toString(),
-                        fileName,
+                        getString(R.string.filename),
                         storageDir
                     )
                     showToast("Saved successfully")
@@ -67,13 +65,13 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (flag) {
+        if (dataSave) {
             super.onBackPressed()
         }
     }
 
     private fun saveFile(local_ip: String, global_ip: String, nameFile: String, path: String) {
-        val json = Gson().toJson(Settings(local_ip, global_ip))
+        val json = Gson().toJson(DataSettings(local_ip, global_ip))
         val file = File(path, nameFile)
         val output: Writer
 
@@ -83,19 +81,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun loadData(storageDir: String) {
-        try {
-            mySettings = getSettings(storageDir)
-            setDataEdit(mySettings)
-            flag = true
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+            myDataSettings = getSettings(storageDir, getString(R.string.filename))
+            setDataEdit(myDataSettings)
+            dataSave = true
     }
 
-    private fun setDataEdit(settings: Settings) {
+    private fun setDataEdit(dataSettings: DataSettings) {
         binding.apply {
-            localEditText.setText(settings.localIp)
-            globalEditText.setText(settings.globalUrl)
+            localEditText.setText(dataSettings.localIp)
+            globalEditText.setText(dataSettings.globalUrl)
         }
     }
 

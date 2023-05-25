@@ -16,23 +16,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkSettings() {
         val file =
-            File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + fileName)
+            File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + getString(R.string.filename))
         try {
             if (checkFile(file)) {
-                Log.d("File: ", "exist")
+                replaceActivity(WebActivity())
             } else {
-                Log.d("File: ", "no exist")
+                showToast("Enter urls")
+                replaceActivity(SettingsActivity())
             }
         } catch (e: Exception) {
             Log.d("Error", e.toString())
-        }finally {
-            replaceActivity(WebActivity())
         }
     }
-
-
-
-
 }
 
 
